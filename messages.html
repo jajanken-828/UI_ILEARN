@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages - NCST iLearn</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --primary-blue: #1d4ed8;
+      --secondary-blue: #3b82f6;
+      --accent-yellow: #fbbf24;
+      --light-blue: #dbeafe;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .sidebar-icon {
+      transition: all 0.3s ease;
+      transform: scale(1);
+    }
+    
+    .sidebar-icon:hover {
+      transform: scale(1.2);
+      color: var(--accent-yellow) !important;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: white;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .tab-button {
+      transition: all 0.3s ease;
+    }
+    
+    .tab-button.active {
+      border-bottom: 3px solid var(--primary-blue);
+      color: var(--primary-blue);
+      font-weight: 600;
+    }
+    
+    .message-item {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .message-item:hover {
+      background-color: #f3f4f6 !important;
+    }
+    
+    .message-item.unread {
+      background-color: #eff6ff;
+    }
+    
+    .message-content {
+      overflow-y: auto;
+    }
+    
+    .message-bubble {
+      max-width: 80%;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .sent-message {
+      background-color: var(--primary-blue);
+      color: white;
+      border-radius: 18px 4px 18px 18px;
+    }
+    
+    .received-message {
+      background-color: #f3f4f6;
+      color: #1f2937;
+      border-radius: 4px 18px 18px 18px;
+    }
+    
+    .active-conversation {
+      background-color: #f1f5f9;
+      border-left: 3px solid var(--primary-blue);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #c5c5c5;
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+    
+    .scrollable-conversations {
+      scrollbar-width: thin;
+      scrollbar-color: #c5c5c5 #f1f1f1;
+    }
+    
+    .chat-info-button {
+      background-color: #f1f5f9;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .attachment-button {
+      background-color: #f1f5f9;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .send-button {
+      background-color: var(--primary-blue);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .online-indicator {
+      width: 10px;
+      height: 10px;
+      background-color: #10b981;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      border: 2px solid white;
+    }
+    
+    .unread-indicator {
+      background-color: var(--primary-blue);
+      color: white;
+      font-size: 12px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .chat-info-sidebar {
+      background-color: white;
+      border-left: 1px solid #e2e8f0;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .info-section {
+      padding: 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .info-section-title {
+      font-size: 0.875rem;
+      color: #4b5563;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    .info-item:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .info-item i {
+      color: #6b7280;
+      margin-right: 12px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .sub-info-item {
+      padding: 8px 10px 8px 40px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    .sub-info-item:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .chat-info-title {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    
+    .filter-tab {
+      padding: 12px 16px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      color: #4b5563;
+    }
+    
+    .filter-tab.active {
+      color: var(--primary-blue);
+    }
+    
+    .filter-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+      right: 16px;
+      height: 3px;
+      background-color: var(--primary-blue);
+    }
+    
+    .conversation-name {
+      color: #1f2937;
+      font-weight: 600;
+    }
+    
+    .conversation-preview {
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+    
+    .conversation-time {
+      color: #6b7280;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <div class="flex flex-1 overflow-hidden">
+    <!-- Sidebar -->
+    <div class="w-20 bg-blue-700 text-white flex flex-col items-center py-6 space-y-8 sticky top-0 h-full">
+      <div class="text-3xl font-bold mt-2">
+        <i class="fas fa-graduation-cap text-yellow-300"></i>
+      </div>
+      <nav class="flex flex-col space-y-8 mt-4">
+        <a href="ilearn.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-home"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Home
+          </div>
+        </a>
+        <a href="subjects.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-book"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Subjects
+          </div>
+        </a>
+        <a href="messages.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-solid fa-message"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Messages
+          </div>
+        </a>
+        <a href="feed.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-newspaper"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            NCST Feed
+          </div>
+        </a>
+        <a href="house.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-users"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Community
+          </div>
+        </a>
+        <a href="edit-profile.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-cog"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Settings
+          </div>
+        </a>
+      </nav>
+      <div class="mt-auto">
+        <a href="#" class="sidebar-icon text-xl hover:text-yellow-300">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main content container -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Header -->
+      <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 m-4">
+        <h1 class="text-xl md:text-3xl font-bold text-gray-800 mb-2">Messages</h1>
+        <p class="text-gray-600">Connect with classmates, instructors, and campus groups</p>
+      </div>
+      
+      <!-- Messages Container -->
+      <div class="flex-1 overflow-hidden flex px-4 pb-4 gap-6">
+        <!-- Conversations Panel -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col w-full md:w-1/4 min-w-[300px]">
+          <div class="p-4">
+            <div class="relative">
+              <input type="text" placeholder="Search Messenger..." class="w-full pl-10 pr-4 py-3 bg-gray-100 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500">
+              <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+            </div>
+          </div>
+          
+          <!-- Filter Tabs -->
+          <div class="flex justify-around border-b">
+            <div class="filter-tab active">Unread</div>
+            <div class="filter-tab">Groups</div>
+            <div class="filter-tab">Communities</div>
+          </div>
+          
+          <div class="overflow-y-auto flex-1 ">
+            <!-- Conversation 1 -->
+            <!-- <div class="message-item p-4 border-b">
+              <div class="flex items-start">
+                <div class="relative">
+                  <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1376&q=80" class="rounded-full w-12 h-12 object-cover mr-3">
+                  <div class="online-indicator"></div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Sarah Johnson</h4>
+                    <span class="conversation-time">2:45 PM</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Can you share the notes from yesterday's HCI lecture?</p>
+                </div>
+              </div>
+            </div> -->
+            
+            <!-- Conversation 2 -->
+            <div class="message-item p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Prof. Denver Prado</h4>
+                    <span class="conversation-time">Yesterday</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Assignment deadline has been extended</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conversation 3 -->
+            <div class="message-item unread p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">NCST Admin</h4>
+                    <span class="conversation-time">Sep 12</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Important campus announcement</p>
+                  <div class="unread-indicator absolute right-4 top-4">3</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conversation 4 -->
+            <div class="message-item p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Coding Club</h4>
+                    <span class="conversation-time">Sep 10</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Hack Night this Friday at Computer Lab 3</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conversation 5 -->
+            <!-- <div class="message-item p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Mark Cruz</h4>
+                    <span class="conversation-time">Sep 8</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Are you joining the symposium tomorrow?</p>
+                </div>
+              </div>
+            </div> -->
+            
+            <!-- Conversation 6 -->
+            <div class="message-item p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Jennifer Lopez</h4>
+                    <span class="conversation-time">Sep 5</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Study group for Discrete Structures?</p>
+                </div>
+              </div>
+            </div>
+            <!-- Conversation 2 -->
+            <div class="message-item p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Prof. Denver Prado</h4>
+                    <span class="conversation-time">Yesterday</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Assignment deadline has been extended</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conversation 3 -->
+            <div class="message-item unread p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">NCST Admin</h4>
+                    <span class="conversation-time">Sep 12</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Important campus announcement</p>
+                  <div class="unread-indicator absolute right-4 top-4">3</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conversation 4 -->
+            <div class="message-item p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Coding Club</h4>
+                    <span class="conversation-time">Sep 10</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Hack Night this Friday at Computer Lab 3</p>
+                </div>
+              </div>
+            </div>
+            <!-- Conversation 2 -->
+            <div class="message-item p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Prof. Denver Prado</h4>
+                    <span class="conversation-time">Yesterday</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Assignment deadline has been extended</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conversation 3 -->
+            <div class="message-item unread p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">NCST Admin</h4>
+                    <span class="conversation-time">Sep 12</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Important campus announcement</p>
+                  <div class="unread-indicator absolute right-4 top-4">3</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conversation 4 -->
+            <div class="message-item p-2 border-b">
+              <div class="flex items-start">
+                <img src="./img/user.png" class="rounded-full w-10 h-10 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Coding Club</h4>
+                    <span class="conversation-time">Sep 10</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Hack Night this Friday at Computer Lab 3</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conversation 7 -->
+            <!-- <div class="message-item active-conversation p-4 border-b">
+              <div class="flex items-start">
+                <div class="relative">
+                  <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" class="rounded-full w-12 h-12 object-cover mr-3">
+                  <div class="online-indicator"></div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Denver Lee</h4>
+                    <span class="conversation-time">Active 38m ago</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Taihaha</p>
+                </div>
+              </div>
+            </div> -->
+            
+            <!-- Conversation 8 -->
+            <!-- <div class="message-item p-4 border-b">
+              <div class="flex items-start">
+                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" class="rounded-full w-12 h-12 object-cover mr-3">
+                <div class="flex-1">
+                  <div class="flex justify-between">
+                    <h4 class="conversation-name">Robotics Club</h4>
+                    <span class="conversation-time">Sep 1</span>
+                  </div>
+                  <p class="conversation-preview truncate mt-1">Workshop on Arduino programming next week</p>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+        
+        <!-- Chat Area -->
+        <div class="bg-white rounded-2xl shadow-lg flex flex-col flex-1 min-w-0">
+          <!-- Chat Header -->
+          <div class="p-4 border-b flex items-center">
+            <div class="relative">
+              <img src="./img/den.png" class="rounded-full w-10 h-10 object-cover mr-3">
+              <div class="online-indicator"></div>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-800">Denver Lee</h4>
+              <p class="text-gray-500 text-sm">Active 38m ago</p>
+            </div>
+            <div class="ml-auto flex space-x-3">
+              <button class="chat-info-button">
+                <i class="fas fa-phone text-gray-600"></i>
+              </button>
+              <button class="chat-info-button">
+                <i class="fas fa-video text-gray-600"></i>
+              </button>
+              <button class="chat-info-button">
+                <i class="fas fa-info-circle text-gray-600"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Chat Messages -->
+          <div class="message-content flex-1 p-4 overflow-y-auto">
+            <!-- Date marker -->
+            <div class="text-center text-gray-500 text-sm my-4">Today</div>
+            
+            <!-- Received message -->
+            <div class="flex mb-4">
+              <img src="./img/den.png" class="rounded-full w-8 h-8 object-cover mr-3 mt-2">
+              <div class="message-bubble received-message p-4">
+                <p>Hey Kenneth! Do you have the notes from yesterday's lecture?</p>
+                <span class="text-gray-500 text-xs block mt-2">2:30 PM</span>
+              </div>
+            </div>
+            
+            <!-- Sent message -->
+            <div class="flex mb-4 justify-end">
+              <div class="message-bubble sent-message p-4">
+                <p>Hi Denver! Yes, I've attached the lecture notes for you.</p>
+                <div class="mt-3 flex items-center p-3 rounded-lg bg-yellow-500 bg-opacity-900">
+                  <i class="fas fa-file-pdf text-black mr-2"></i>
+                  <span class="text-black font-medium">HCI_Lecture_Notes_Sep12.pdf</span>
+                  <span class="text-black text-sm ml-auto">2.4 MB</span>
+                </div>
+                <span class="text-blue-200 text-xs block mt-2">2:35 PM</span>
+              </div>
+              <img src="./img/ken.png" class="rounded-full w-8 h-8 object-cover ml-3 mt-2">
+            </div>
+            
+            <!-- Received message -->
+            <div class="flex mb-4">
+              <img src="./img/den.png" class="rounded-full w-8 h-8 object-cover mr-3 mt-2">
+              <div class="message-bubble received-message p-4">
+                <p>Thanks Kenneth! Did Prof. Martos mention anything about the assignment?</p>
+                <span class="text-gray-500 text-xs block mt-2">2:40 PM</span>
+              </div>
+            </div>
+            
+            <!-- Sent message -->
+            <div class="flex mb-4 justify-end">
+              <div class="message-bubble sent-message p-4">
+                <p>Yes! He said the deadline is extended to Friday. Also, we can work in pairs.</p>
+                <span class="text-blue-200 text-xs block mt-2">2:42 PM</span>
+              </div>
+              <img src="./img/ken.png" class="rounded-full w-8 h-8 object-cover ml-3 mt-2">
+            </div>
+            
+            <!-- Received message -->
+            <div class="flex mb-4">
+              <img src="./img/den.png" class="rounded-full w-8 h-8 object-cover mr-3 mt-2">
+              <div class="message-bubble received-message p-4">
+                <p>That's great! Want to partner up for this assignment?</p>
+                <span class="text-gray-500 text-xs block mt-2">2:45 PM</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Message Input -->
+          <div class="p-4 border-t">
+            <div class="flex items-center">
+              <div class="attachment-button mr-2">
+                <i class="fas fa-paperclip text-gray-600"></i>
+              </div>
+              <div class="attachment-button mr-2">
+                <i class="fas fa-image text-gray-600"></i>
+              </div>
+              <div class="flex-1">
+                <input type="text" placeholder="Type your message..." class="w-full px-4 py-3 bg-gray-100 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500">
+              </div>
+              <div class="send-button ml-3">
+                <i class="fas fa-paper-plane text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chat Info Sidebar -->
+        <div class="bg-white rounded-2xl shadow-lg flex flex-col w-80">
+          <!-- Contact Info -->
+          <div class="p-6 border-b">
+            <div class="flex flex-col items-center">
+              <div class="relative mb-4">
+                <img src="./img/den.png" class="rounded-full w-24 h-24 object-cover">
+                <div class="online-indicator" style="width: 14px; height: 14px;"></div>
+              </div>
+              <h3 class="font-bold text-xl text-gray-800 mb-1">Denver Lee</h3>
+              <p class="text-gray-500 text-sm">Active 38m ago</p>
+            </div>
+          </div>
+          
+          <!-- Encrypted Section -->
+          <div class="p-6 border-b">
+            <p class="text-center text-gray-500 text-sm mb-4">End-to-end encrypted</p>
+            <div class="space-y-2">
+              <div class="flex items-center p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <i class="fas fa-user-circle text-gray-500 mr-3"></i>
+                <span>Profile</span>
+              </div>
+              <div class="flex items-center p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <i class="fas fa-bell-slash text-gray-500 mr-3"></i>
+                <span>Mute</span>
+              </div>
+              <div class="flex items-center p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <i class="fas fa-search text-gray-500 mr-3"></i>
+                <span>Search</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Chat Info Section -->
+          <div class="p-6">
+            <h5 class="font-semibold text-gray-800 text-lg mb-4">Chat info</h5>
+            <div class="space-y-2">
+              <div class="p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <span>Customize chat</span>
+              </div>
+              <div class="p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <span>Media & files</span>
+              </div>
+              <div class="pl-6 space-y-2 mt-2">
+                <div class="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                  <span>Media</span>
+                </div>
+                <div class="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                  <span>Files</span>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <span>Privacy & support</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Simple hover effect for sidebar tooltips
+    document.querySelectorAll('.sidebar-icon').forEach(icon => {
+      icon.addEventListener('mouseenter', function() {
+        const tooltip = this.querySelector('.sidebar-tooltip');
+        if(tooltip) {
+          tooltip.classList.remove('opacity-0');
+          tooltip.classList.add('opacity-100');
+        }
+      });
+      
+      icon.addEventListener('mouseleave', function() {
+        const tooltip = this.querySelector('.sidebar-tooltip');
+        if(tooltip) {
+          tooltip.classList.remove('opacity-100');
+          tooltip.classList.add('opacity-0');
+        }
+      });
+    });
+    
+    // Message item click functionality
+    document.querySelectorAll('.message-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.message-item').forEach(i => i.classList.remove('active-conversation'));
+        this.classList.add('active-conversation');
+        
+        // Update chat header
+        const name = this.querySelector('.conversation-name').textContent;
+        const status = this.querySelector('.conversation-time').textContent;
+        
+        document.querySelector('.chat-header h4').textContent = name;
+        document.querySelector('.chat-header p').textContent = status;
+        
+        // Update chat info sidebar
+        document.querySelector('.chat-info-sidebar h3').textContent = name;
+        document.querySelector('.chat-info-sidebar p').textContent = status;
+      });
+    });
+    
+    // Filter tab functionality
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Send message functionality
+    const messageInput = document.querySelector('.message-content + div input');
+    const sendButton = document.querySelector('.send-button');
+    
+    if(sendButton && messageInput) {
+      sendButton.addEventListener('click', function() {
+        const message = messageInput.value.trim();
+        if(message) {
+          const messageContainer = document.querySelector('.message-content');
+          
+          // Create new message element
+          const messageElement = document.createElement('div');
+          messageElement.className = 'flex mb-4 justify-end';
+          messageElement.innerHTML = `
+            <div class="message-bubble sent-message p-4">
+              <p>${message}</p>
+              <span class="text-blue-200 text-xs block mt-2">Just now</span>
+            </div>
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80" class="rounded-full w-8 h-8 object-cover ml-3 mt-2">
+          `;
+          
+          // Add to message container
+          messageContainer.appendChild(messageElement);
+          
+          // Clear input
+          messageInput.value = '';
+          
+          // Scroll to bottom
+          messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+      });
+      
+      // Allow sending with Enter key
+      messageInput.addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') {
+          sendButton.click();
+        }
+      });
+    }
+    
+    // Scroll to bottom of messages on load
+    window.addEventListener('load', function() {
+      const messageContainer = document.querySelector('.message-content');
+      if(messageContainer) {
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCST Feed - Campus News & Updates</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+    }
+    
+    .sidebar-icon {
+      transition: all 0.3s ease;
+      transform: scale(1);
+    }
+    
+    .sidebar-icon:hover {
+      transform: scale(1.2);
+      color: #fbbf24 !important;
+    }
+    
+    .post-card {
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    
+    .post-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
+    }
+    
+    .featured-banner {
+      background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 100%);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: white;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .post-interactions button {
+      transition: all 0.2s ease;
+    }
+    
+    .post-interactions button:hover {
+      color: #3b82f6;
+      transform: translateY(-2px);
+    }
+    
+    .trending-tag {
+      transition: all 0.2s ease;
+    }
+    
+    .trending-tag:hover {
+      background-color: #1d4ed8 !important;
+      color: white !important;
+    }
+    
+    .active-tab {
+      position: relative;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+    
+    .active-tab::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #1d4ed8;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <div class="w-20 bg-blue-700 text-white flex flex-col items-center py-6 space-y-8 sticky top-0 h-screen">
+      <div class="text-3xl font-bold mt-2">
+        <i class="fas fa-graduation-cap text-yellow-300"></i>
+      </div>
+      <nav class="flex flex-col space-y-8 mt-4">
+        <a href="ilearn.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-home"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Home
+          </div>
+        </a>
+        <a href="subjects.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-book"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Subjects
+          </div>
+        </a>
+        <a href="messages.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-solid fa-message"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Messages
+          </div>
+        </a>
+        <a href="feed.html" class="sidebar-icon text-xl hover:text-yellow-300 relative active">
+          <i class="fas fa-newspaper"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            NCST Feed
+          </div>
+        </a>
+        <a href="house.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-users"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-900 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Makabayan
+          </div>
+        </a>
+        <a href="#" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-cog"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Settings
+          </div>
+        </a>
+      </nav>
+      <div class="mt-auto">
+        <a href="#" class="sidebar-icon text-xl hover:text-yellow-300">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 p-6">
+      <!-- Top header -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div class="mb-4 md:mb-0">
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-800">NCST Newsfeed <span class="text-blue-600">– Your Campus, Your Story</span></h1>
+          <p class="text-gray-600 mt-1">News, Updates, Announcements and all about NCST</p>
+        </div>
+        <div class="flex items-center space-x-4 w-full md:w-auto">
+          <div class="relative flex-1 md:flex-none">
+            <input type="text" placeholder="Search news, events, people..."
+              class="w-full md:w-72 pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent text-gray-700">
+            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+          </div>
+          <div class="relative">
+            <div class="bg-white p-3 rounded-xl shadow cursor-pointer hover:bg-gray-50">
+              <i class="fas fa-bell text-gray-600"></i>
+            </div>
+            <span class="notification-badge">5</span>
+          </div>
+          <div class="hidden md:flex items-center">
+            <img src="./img/ken.png" alt="Avatar" class="rounded-full w-10 h-10 object-cover border-2 border-blue-300">
+          </div>
+        </div>
+      </div>
+
+      <!-- Content grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left column -->
+        <div class="lg:col-span-8 space-y-6">
+          <!-- Create Post Card -->
+          <div class="bg-white p-6 rounded-2xl shadow-lg">
+            <div class="flex items-start">
+              <img src="./img/ken.png" alt="Avatar" class="rounded-full w-12 h-12 object-cover mr-4">
+              <div class="flex-1">
+                <input type="text" placeholder="What's happening at NCST today?" class="w-full px-4 py-3 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100">
+                <div class="flex justify-between items-center mt-4">
+                  <div class="flex space-x-3">
+                    <button class="p-2 rounded-full hover:bg-blue-50 text-blue-500">
+                      <i class="fas fa-image"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-blue-50 text-green-500">
+                      <i class="fas fa-calendar"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-blue-50 text-purple-500">
+                      <i class="fas fa-poll"></i>
+                    </button>
+                  </div>
+                  <button class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors">
+                    Post
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feed Filter Tabs -->
+          <div class="bg-white p-4 rounded-2xl shadow-lg">
+            <div class="flex overflow-x-auto space-x-6 pb-1">
+              <button class="px-4 py-2 active-tab whitespace-nowrap">All Updates</button>
+              <button class="px-4 py-2 text-gray-600 hover:text-blue-600 whitespace-nowrap">Announcements</button>
+              <button class="px-4 py-2 text-gray-600 hover:text-blue-600 whitespace-nowrap">Events</button>
+              <button class="px-4 py-2 text-gray-600 hover:text-blue-600 whitespace-nowrap">Clubs</button>
+              <button class="px-4 py-2 text-gray-600 hover:text-blue-600 whitespace-nowrap">Academic</button>
+              <button class="px-4 py-2 text-gray-600 hover:text-blue-600 whitespace-nowrap">Student Life</button>
+            </div>
+          </div>
+
+          <!-- News Feed -->
+          <div class="space-y-6">
+            <!-- Post 1 -->
+            <div class="post-card bg-white p-6 rounded-2xl shadow-lg">
+              <div class="flex items-start">
+                <img src="https://images.unsplash.com/photo-1584697964358-3e14ca57658b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="NCST Admin" class="rounded-full w-12 h-12 object-cover border-2 border-blue-300">
+                <div class="ml-4 flex-1">
+                  <div class="flex justify-between">
+                    <div>
+                      <h3 class="font-bold text-gray-800">NCST Admin</h3>
+                      <p class="text-gray-500 text-sm">Official Announcement · 2 hours ago</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                  </div>
+                  <div class="mt-4">
+                    <p class="text-gray-700">Attention all students! The annual NCST Foundation Day celebration will be held on October 15-17. Get ready for three days of exciting activities, competitions, and cultural shows!</p>
+                  </div>
+                  <div class="mt-4 grid grid-cols-2 gap-3">
+                    <img src="./img/sample.png" alt="Event" class="rounded-xl w-full h-48 object-cover">
+                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Event" class="rounded-xl w-full h-48 object-cover">
+                  </div>
+                  <div class="mt-4 flex justify-between text-gray-500 text-sm">
+                    <div>
+                      <span class="text-blue-600 font-medium">124</span> Likes · 
+                      <span class="text-blue-600 font-medium">32</span> Comments
+                    </div>
+                    <div>
+                      <span class="text-blue-600 font-medium">18</span> Shares
+                    </div>
+                  </div>
+                  <div class="mt-3 pt-3 border-t flex justify-between post-interactions">
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-thumbs-up"></i>
+                      <span>Like</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-comment"></i>
+                      <span>Comment</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-share-square"></i>
+                      <span>Share</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="post-card bg-white p-6 rounded-2xl shadow-lg">
+              <div class="flex items-start">
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="IT Department" class="rounded-full w-12 h-12 object-cover border-2 border-blue-300">
+                <div class="ml-4 flex-1">
+                  <div class="flex justify-between">
+                    <div>
+                      <h3 class="font-bold text-gray-800">IT Department</h3>
+                      <p class="text-gray-500 text-sm">Academic Update · 5 hours ago</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                  </div>
+                  <div class="mt-4">
+                    <p class="text-gray-700">Calling all BSIT students! The deadline for Web Systems project submission has been extended to September 30. Please submit your projects via the iLearn platform.</p>
+                  </div>
+                  <div class="mt-4 bg-blue-50 p-4 rounded-xl">
+                    <h4 class="font-bold text-gray-800 mb-2">Important Reminder</h4>
+                    <p class="text-gray-600 text-sm">All projects must include proper documentation and a 5-minute presentation video. Late submissions will incur a 10% penalty per day.</p>
+                  </div>
+                  <div class="mt-4 flex justify-between text-gray-500 text-sm">
+                    <div>
+                      <span class="text-blue-600 font-medium">87</span> Likes · 
+                      <span class="text-blue-600 font-medium">24</span> Comments
+                    </div>
+                    <div>
+                      <span class="text-blue-600 font-medium">9</span> Shares
+                    </div>
+                  </div>
+                  <div class="mt-3 pt-3 border-t flex justify-between post-interactions">
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-thumbs-up"></i>
+                      <span>Like</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-comment"></i>
+                      <span>Comment</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-share-square"></i>
+                      <span>Share</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Post 3 -->
+            <div class="post-card bg-white p-6 rounded-2xl shadow-lg">
+              <div class="flex items-start">
+                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Coding Club" class="rounded-full w-12 h-12 object-cover border-2 border-blue-300">
+                <div class="ml-4 flex-1">
+                  <div class="flex justify-between">
+                    <div>
+                      <h3 class="font-bold text-gray-800">NCST Coding Club</h3>
+                      <p class="text-gray-500 text-sm">Club Announcement · 1 day ago</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                  </div>
+                  <div class="mt-4">
+                    <p class="text-gray-700">Join us for our weekly Hack Night this Friday at the Computer Lab! This week's challenge: Build a responsive dashboard in 2 hours. Prizes for the top 3 implementations!</p>
+                  </div>
+                  <div class="mt-4 flex items-center bg-yellow-50 p-4 rounded-xl">
+                    <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                      <i class="fas fa-calendar-day text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-gray-800">Hack Night #7</h4>
+                      <p class="text-gray-600 text-sm">Friday, September 8 · 6:00 PM - 9:00 PM</p>
+                      <p class="text-gray-600 text-sm">Computer Lab 3, Main Building</p>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex justify-between text-gray-500 text-sm">
+                    <div>
+                      <span class="text-blue-600 font-medium">142</span> Likes · 
+                      <span class="text-blue-600 font-medium">47</span> Comments
+                    </div>
+                    <div>
+                      <span class="text-blue-600 font-medium">22</span> Shares
+                    </div>
+                  </div>
+                  <div class="mt-3 pt-3 border-t flex justify-between post-interactions">
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-thumbs-up"></i>
+                      <span>Like</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-comment"></i>
+                      <span>Comment</span>
+                    </button>
+                    <button class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50">
+                      <i class="far fa-share-square"></i>
+                      <span>Share</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="lg:col-span-4 space-y-6">
+          <!-- Campus Events -->
+          <div class="bg-white p-6 rounded-2xl shadow-lg">
+            <div class="flex justify-between items-center mb-5">
+              <h3 class="font-bold text-xl text-gray-800">Upcoming Campus Events</h3>
+              <a href="#" class="text-blue-600 font-medium flex items-center hover:text-blue-800">
+                View All <i class="fas fa-chevron-right ml-2 text-xs"></i>
+              </a>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-start p-3 rounded-xl bg-blue-50">
+                <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                  <div class="text-center">
+                    <div class="font-bold text-blue-800">SEP</div>
+                    <div class="text-2xl font-bold text-blue-800">15</div>
+                  </div>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Foundation Day Opening</h4>
+                  <p class="text-gray-500 text-sm">9:00 AM · Quadrangle</p>
+                  <div class="mt-2 flex space-x-2">
+                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Campus Event</span>
+                    <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">All Students</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-start p-3 rounded-xl bg-yellow-50">
+                <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+                  <div class="text-center">
+                    <div class="font-bold text-yellow-800">SEP</div>
+                    <div class="text-2xl font-bold text-yellow-800">20</div>
+                  </div>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Career Fair 2023</h4>
+                  <p class="text-gray-500 text-sm">10:00 AM · Gymnasium</p>
+                  <div class="mt-2 flex space-x-2">
+                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Career</span>
+                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Seniors</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-start p-3 rounded-xl bg-green-50">
+                <div class="bg-green-100 p-3 rounded-lg mr-4">
+                  <div class="text-center">
+                    <div class="font-bold text-green-800">OCT</div>
+                    <div class="text-2xl font-bold text-green-800">5</div>
+                  </div>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">IT Research Symposium</h4>
+                  <p class="text-gray-500 text-sm">1:00 PM · Auditorium</p>
+                  <div class="mt-2 flex space-x-2">
+                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Academic</span>
+                    <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">BSIT</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trending Topics -->
+          <div class="bg-white p-6 rounded-2xl shadow-lg">
+            <h3 class="font-bold text-xl text-gray-800 mb-5">Trending Topics</h3>
+            <div class="space-y-4">
+              <div class="p-3 rounded-xl bg-gray-50">
+                <div class="flex justify-between">
+                  <span class="text-gray-500 text-sm">Trending in NCST</span>
+                  <button class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+                <h4 class="font-bold text-lg mt-1 text-gray-800">#FoundationDay2023</h4>
+                <p class="text-gray-500 text-sm mt-1">1,245 posts</p>
+              </div>
+              <div class="p-3 rounded-xl bg-gray-50">
+                <div class="flex justify-between">
+                  <span class="text-gray-500 text-sm">Trending in NCST</span>
+                  <button class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+                <h4 class="font-bold text-lg mt-1 text-gray-800">#WebSystemsDeadline</h4>
+                <p class="text-gray-500 text-sm mt-1">872 posts</p>
+              </div>
+              <div class="p-3 rounded-xl bg-gray-50">
+                <div class="flex justify-between">
+                  <span class="text-gray-500 text-sm">Trending in NCST</span>
+                  <button class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+                <h4 class="font-bold text-lg mt-1 text-gray-800">#CodingClubHackNight</h4>
+                <p class="text-gray-500 text-sm mt-1">645 posts</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campus Clubs -->
+          <div class="bg-white p-6 rounded-2xl shadow-lg">
+            <div class="flex justify-between items-center mb-5">
+              <h3 class="font-bold text-xl text-gray-800">Featured Campus Clubs</h3>
+              <a href="#" class="text-blue-600 font-medium flex items-center hover:text-blue-800">
+                View All <i class="fas fa-chevron-right ml-2 text-xs"></i>
+              </a>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-center p-3 rounded-xl bg-blue-50">
+                <div class="w-12 h-12 rounded-lg bg-purple-500 flex items-center justify-center mr-3">
+                  <i class="fas fa-code text-white text-lg"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Coding Club</h4>
+                  <p class="text-gray-500 text-sm">245 members</p>
+                </div>
+              </div>
+              <div class="flex items-center p-3 rounded-xl bg-green-50">
+                <div class="w-12 h-12 rounded-lg bg-green-500 flex items-center justify-center mr-3">
+                  <i class="fas fa-paint-brush text-white text-lg"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Art Society</h4>
+                  <p class="text-gray-500 text-sm">187 members</p>
+                </div>
+              </div>
+              <div class="flex items-center p-3 rounded-xl bg-yellow-50">
+                <div class="w-12 h-12 rounded-lg bg-yellow-500 flex items-center justify-center mr-3">
+                  <i class="fas fa-basketball-ball text-white text-lg"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Sports Club</h4>
+                  <p class="text-gray-500 text-sm">312 members</p>
+                </div>
+              </div>
+              <div class="flex items-center p-3 rounded-xl bg-red-50">
+                <div class="w-12 h-12 rounded-lg bg-red-500 flex items-center justify-center mr-3">
+                  <i class="fas fa-music text-white text-lg"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">Music Guild</h4>
+                  <p class="text-gray-500 text-sm">156 members</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Simple hover effect for sidebar tooltips
+    document.querySelectorAll('.sidebar-icon').forEach(icon => {
+      icon.addEventListener('mouseenter', function() {
+        const tooltip = this.querySelector('.sidebar-tooltip');
+        if(tooltip) {
+          tooltip.classList.remove('opacity-0');
+          tooltip.classList.add('opacity-100');
+        }
+      });
+      
+      icon.addEventListener('mouseleave', function() {
+        const tooltip = this.querySelector('.sidebar-tooltip');
+        if(tooltip) {
+          tooltip.classList.remove('opacity-100');
+          tooltip.classList.add('opacity-0');
+        }
+      });
+    });
+    
+    // Like button functionality
+    document.querySelectorAll('.post-interactions .fa-thumbs-up').forEach(icon => {
+      icon.addEventListener('click', function() {
+        if(this.classList.contains('far')) {
+          this.classList.remove('far');
+          this.classList.add('fas', 'text-blue-600');
+        } else {
+          this.classList.remove('fas', 'text-blue-600');
+          this.classList.add('far');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

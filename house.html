@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Makabayan Club - NCST Campus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --makabayan-primary: #1a3a5a;
+      --makabayan-secondary: #e6f4ff;
+      --makabayan-accent: #ffd700;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+    }
+    
+    .sidebar-icon {
+      transition: all 0.3s ease;
+      transform: scale(1);
+    }
+    
+    .sidebar-icon:hover {
+      transform: scale(1.2);
+      color: var(--makabayan-accent) !important;
+    }
+    
+    .club-card {
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    
+    .club-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(26, 58, 90, 0.2);
+    }
+    
+    .featured-banner {
+      background: linear-gradient(90deg, var(--makabayan-primary) 0%, #2c5282 100%);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: white;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .active-tab {
+      position: relative;
+      color: var(--makabayan-primary);
+      font-weight: 600;
+    }
+    
+    .active-tab::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--makabayan-primary);
+      border-radius: 3px;
+    }
+    
+    .club-header {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./img/makabayan.png');
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .project-card {
+      transition: all 0.3s ease;
+    }
+    
+    .project-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .chat-message:hover {
+      background-color: var(--makabayan-secondary);
+    }
+    
+    .calendar-day:hover {
+      background-color: var(--makabayan-secondary);
+    }
+    
+    .blue-accent {
+      color: var(--makabayan-primary);
+    }
+    
+    .blue-bg {
+      background-color: var(--makabayan-primary);
+    }
+    
+    .blue-light-bg {
+      background-color: var(--makabayan-secondary);
+    }
+    
+    .yellow-accent {
+      color: var(--makabayan-accent);
+    }
+    
+    .yellow-bg {
+      background-color: var(--makabayan-accent);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <div class="w-20 bg-blue-700 text-white flex flex-col items-center py-6 space-y-8 sticky top-0 h-screen">
+      <div class="text-3xl font-bold mt-2">
+        <i class="fas fa-graduation-cap text-yellow-300"></i>
+      </div>
+      <nav class="flex flex-col space-y-8 mt-4">
+        <a href="ilearn.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-home"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-900 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Home
+          </div>
+        </a>
+        <a href="subjects.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-book"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-900 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Subjects
+          </div>
+        </a>
+        <a href="messages.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-solid fa-message"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-800 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Messages
+          </div>
+        </a>
+        <a href="feed.html" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-newspaper"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-900 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            NCST Feed
+          </div>
+        </a>
+        <a href="house.html" class="sidebar-icon text-xl hover:text-yellow-300 relative active">
+          <i class="fas fa-users"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-900 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Makabayan
+          </div>
+        </a>
+        <a href="#" class="sidebar-icon text-xl hover:text-yellow-300 relative">
+          <i class="fas fa-cog"></i>
+          <div class="absolute left-full ml-3 bg-white text-blue-900 px-2 py-1 rounded shadow-lg text-xs font-medium opacity-0 pointer-events-none transition-opacity sidebar-tooltip">
+            Settings
+          </div>
+        </a>
+      </nav>
+      <div class="mt-auto">
+        <a href="#" class="sidebar-icon text-xl hover:text-yellow-300">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1">
+      <!-- Club Header -->
+      <div class="club-header text-white p-8 md:p-12">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
+          <div class="md:w-1/4 flex justify-center mb-6 md:mb-0">
+            <div class="bg-white p-3 rounded-full">
+              <div class="bg-blue-100 border-2 border-blue-300 rounded-full w-32 h-32 flex items-center justify-center">
+                <img src="./img/Log-mak.png" class="rounded-full" alt="" srcset="">
+              </div>
+            </div>
+          </div>
+          <div class="md:w-3/4 text-center md:text-left md:pl-8">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">House of Makabayan</h1>
+            <p class="text-blue-200 mb-4 max-w-2xl">Promoting national identity, cultural heritage, and civic responsibility among NCST students</p>
+            <!-- <div class="flex flex-wrap justify-center md:justify-start gap-4">
+              <button class="px-5 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-xl transition-colors shadow-md">
+                Join Club <i class="fas fa-user-plus ml-2"></i>
+              </button>
+              <button class="px-5 py-3 bg-white hover:bg-gray-100 text-blue-800 font-semibold rounded-xl transition-colors shadow-md">
+                Follow <i class="fas fa-bell ml-2"></i>
+              </button>
+              <button class="px-5 py-3 bg-transparent hover:bg-blue-700 text-white border border-white font-semibold rounded-xl transition-colors shadow-md">
+                Share <i class="fas fa-share-alt ml-2"></i>
+              </button>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Club Navigation -->
+      <div class="bg-white border-b">
+        <div class="max-w-6xl mx-auto">
+          <div class="flex overflow-x-auto space-x-8 px-4 py-3">
+            <button class="px-4 py-3 active-tab whitespace-nowrap">Overview</button>
+            <button class="px-4 py-3 text-gray-600 hover:text-blue-800 whitespace-nowrap">Projects</button>
+            <button class="px-4 py-3 text-gray-600 hover:text-blue-800 whitespace-nowrap">Activities</button>
+            <button class="px-4 py-3 text-gray-600 hover:text-blue-800 whitespace-nowrap">Community</button>
+            <button class="px-4 py-3 text-gray-600 hover:text-blue-800 whitespace-nowrap">Members</button>
+            <button class="px-4 py-3 text-gray-600 hover:text-blue-800 whitespace-nowrap">Resources</button>
+            <button class="px-4 py-3 text-gray-600 hover:text-blue-800 whitespace-nowrap">Gallery</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Club Content -->
+      <div class="max-w-6xl mx-auto p-4 md:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Left Column -->
+          <div class="lg:col-span-2 space-y-6">
+            <!-- About Club -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+              <h2 class="font-bold text-2xl text-blue-800 mb-4">About Makabayan Club</h2>
+              <p class="text-gray-700 mb-4">
+                The Makabayan Club is dedicated to fostering patriotism, cultural awareness, and civic responsibility among NCST students. Founded in 2010, we organize events and activities that promote Filipino heritage, national identity, and community service.
+              </p>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div class="text-center p-4 bg-blue-50 rounded-xl">
+                  <div class="text-3xl font-bold text-blue-700">120+</div>
+                  <div class="text-gray-600">Members</div>
+                </div>
+                <div class="text-center p-4 bg-blue-50 rounded-xl">
+                  <div class="text-3xl font-bold text-blue-700">24</div>
+                  <div class="text-gray-600">Projects</div>
+                </div>
+                <div class="text-center p-4 bg-blue-50 rounded-xl">
+                  <div class="text-3xl font-bold text-blue-700">8</div>
+                  <div class="text-gray-600">Events this Month</div>
+                </div>
+                <div class="text-center p-4 bg-blue-50 rounded-xl">
+                  <div class="text-3xl font-bold text-blue-700">2010</div>
+                  <div class="text-gray-600">Established</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Featured Projects -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+              <div class="flex justify-between items-center mb-5">
+                <h3 class="font-bold text-xl text-blue-800">Featured Projects</h3>
+                <a href="#" class="text-blue-600 font-medium flex items-center hover:text-blue-800">
+                  View All <i class="fas fa-chevron-right ml-2 text-xs"></i>
+                </a>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="project-card bg-blue-50 p-5 rounded-2xl border border-blue-200">
+                  <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center mr-3">
+                      <i class="fas fa-tree text-white text-lg"></i>
+                    </div>
+                    <h4 class="font-bold text-blue-800">Tree Planting Initiative</h4>
+                  </div>
+                  <p class="text-gray-600 mb-4">Monthly tree planting activities in Cavite's reforestation areas. Join us every 3rd Saturday of the month.</p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-blue-700 font-medium">Ongoing</span>
+                    <div class="flex">
+                      <span class="text-gray-500 text-sm mr-2">24 participants</span>
+                      <div class="flex -space-x-2">
+                        <img src="https://randomuser.me/api/portraits/women/12.jpg" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-6 h-6 rounded-full border-2 border-white">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-6 h-6 rounded-full border-2 border-white">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="project-card bg-blue-50 p-5 rounded-2xl border border-blue-200">
+                  <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-lg bg-yellow-500 flex items-center justify-center mr-3">
+                      <i class="fas fa-book text-white text-lg"></i>
+                    </div>
+                    <h4 class="font-bold text-blue-800">Heritage Book Drive</h4>
+                  </div>
+                  <p class="text-gray-600 mb-4">Collecting books about Filipino history and culture for public school libraries in Cavite.</p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-blue-700 font-medium">Ends: Oct 30</span>
+                    <div class="flex">
+                      <span class="text-gray-500 text-sm mr-2">312 books collected</span>
+                      <div class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                        78% funded
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upcoming Activities -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+              <div class="flex justify-between items-center mb-5">
+                <h3 class="font-bold text-xl text-blue-800">Upcoming Activities</h3>
+                <a href="#" class="text-blue-600 font-medium flex items-center hover:text-blue-800">
+                  View Calendar <i class="fas fa-chevron-right ml-2 text-xs"></i>
+                </a>
+              </div>
+              
+              <div class="grid grid-cols-1 gap-4">
+                <div class="flex items-center p-4 rounded-xl bg-blue-50 border border-blue-100">
+                  <div class="bg-blue-600 text-white p-3 rounded-lg mr-4 w-16 text-center">
+                    <div class="font-bold">SEP</div>
+                    <div class="text-2xl font-bold">15</div>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-800">Philippine History Symposium</h4>
+                    <p class="text-gray-500 text-sm">2:00 PM - 5:00 PM · NCST Auditorium</p>
+                    <div class="mt-2 flex space-x-2">
+                      <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Academic</span>
+                      <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Guest Speaker</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center p-4 rounded-xl bg-yellow-50 border border-yellow-100">
+                  <div class="bg-yellow-500 text-white p-3 rounded-lg mr-4 w-16 text-center">
+                    <div class="font-bold">SEP</div>
+                    <div class="text-2xl font-bold">22</div>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-800">Traditional Filipino Games Day</h4>
+                    <p class="text-gray-500 text-sm">9:00 AM - 12:00 PM · NCST Quadrangle</p>
+                    <div class="mt-2 flex space-x-2">
+                      <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Cultural</span>
+                      <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">All Students</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center p-4 rounded-xl bg-blue-100 border border-blue-200">
+                  <div class="bg-blue-700 text-white p-3 rounded-lg mr-4 w-16 text-center">
+                    <div class="font-bold">SEP</div>
+                    <div class="text-2xl font-bold">28</div>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-800">Community Outreach Program</h4>
+                    <p class="text-gray-500 text-sm">8:00 AM - 4:00 PM · Brgy. San Agustin</p>
+                    <div class="mt-2 flex space-x-2">
+                      <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Volunteer</span>
+                      <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">Requires RSVP</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="lg:col-span-1 space-y-6">
+            <!-- Club Leaders -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+              <h3 class="font-bold text-xl text-blue-800 mb-5">Club Leaders</h3>
+              <div class="space-y-4">
+                <div class="flex items-center p-3 rounded-xl bg-blue-50">
+                  <img src="https://randomuser.me/api/portraits/women/65.jpg" class="rounded-full w-14 h-14 object-cover border-2 border-blue-300 mr-4">
+                  <div>
+                    <h4 class="font-bold text-gray-800">Maria Santos</h4>
+                    <p class="text-gray-500 text-sm">President</p>
+                    <div class="mt-1 flex space-x-2">
+                      <button class="p-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200">
+                        <i class="fab fa-facebook-messenger text-xs"></i>
+                      </button>
+                      <button class="p-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200">
+                        <i class="fas fa-envelope text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center p-3 rounded-xl bg-blue-50">
+                  <img src="https://randomuser.me/api/portraits/men/41.jpg" class="rounded-full w-14 h-14 object-cover border-2 border-blue-300 mr-4">
+                  <div>
+                    <h4 class="font-bold text-gray-800">Juan Dela Cruz</h4>
+                    <p class="text-gray-500 text-sm">Vice President</p>
+                    <div class="mt-1 flex space-x-2">
+                      <button class="p-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200">
+                        <i class="fab fa-facebook-messenger text-xs"></i>
+                      </button>
+                      <button class="p-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200">
+                        <i class="fas fa-envelope text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center p-3 rounded-xl bg-blue-50">
+                  <img src="https://randomuser.me/api/portraits/women/32.jpg" class="rounded-full w-14 h-14 object-cover border-2 border-blue-300 mr-4">
+                  <div>
+                    <h4 class="font-bold text-gray-800">Andrea Reyes</h4>
+                    <p class="text-gray-500 text-sm">Project Coordinator</p>
+                    <div class="mt-1 flex space-x-2">
+                      <button class="p-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200">
+                        <i class="fab fa-facebook-messenger text-xs"></i>
+                      </button>
+                      <button class="p-1 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200">
+                        <i class="fas fa-envelope text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Community Chat -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+              <div class="flex justify-between items-center mb-5">
+                <h3 class="font-bold text-xl text-blue-800">Community Chat</h3>
+                <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">24 Online</span>
+              </div>
+              
+              <div class="bg-blue-50 rounded-xl p-4 h-80 overflow-y-auto mb-4">
+                <div class="space-y-3">
+                  <div class="chat-message bg-white p-3 rounded-lg">
+                    <div class="flex items-start">
+                      <img src="https://randomuser.me/api/portraits/men/22.jpg" class="rounded-full w-8 h-8 object-cover mr-2">
+                      <div>
+                        <div class="font-bold text-sm">Carlos M.</div>
+                        <p class="text-sm">Is anyone going to the symposium tomorrow?</p>
+                        <span class="text-gray-400 text-xs">2:45 PM</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="chat-message bg-white p-3 rounded-lg">
+                    <div class="flex items-start">
+                      <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-full w-8 h-8 object-cover mr-2">
+                      <div>
+                        <div class="font-bold text-sm">Liza T.</div>
+                        <p class="text-sm">I'll be there! I heard Prof. Santos will be speaking about pre-colonial history</p>
+                        <span class="text-gray-400 text-xs">2:47 PM</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="chat-message bg-white p-3 rounded-lg ml-8">
+                    <div class="flex items-start">
+                      <img src="https://randomuser.me/api/portraits/men/65.jpg" class="rounded-full w-8 h-8 object-cover mr-2">
+                      <div>
+                        <div class="font-bold text-sm">Miguel R.</div>
+                        <p class="text-sm">Don't forget to bring your notebooks. There might be a quiz after!</p>
+                        <span class="text-gray-400 text-xs">2:49 PM</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="chat-message bg-blue-100 p-3 rounded-lg">
+                    <div class="flex items-start">
+                      <img src="https://randomuser.me/api/portraits/women/65.jpg" class="rounded-full w-8 h-8 object-cover mr-2">
+                      <div>
+                        <div class="font-bold text-sm">Maria S. (President)</div>
+                        <p class="text-sm">Just a reminder: We'll meet at the auditorium entrance at 1:45 PM</p>
+                        <span class="text-gray-400 text-xs">2:52 PM</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flex">
+                <input type="text" placeholder="Type your message..." class="flex-1 px-4 py-2 border rounded-l-xl focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <button class="px-4 bg-blue-600 text-white rounded-r-xl">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Calendar -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg">
+              <h3 class="font-bold text-xl text-blue-800 mb-5">September 2023</h3>
+              <div class="grid grid-cols-7 gap-1 mb-2">
+                <div class="text-center text-xs text-gray-500 p-1">S</div>
+                <div class="text-center text-xs text-gray-500 p-1">M</div>
+                <div class="text-center text-xs text-gray-500 p-1">T</div>
+                <div class="text-center text-xs text-gray-500 p-1">W</div>
+                <div class="text-center text-xs text-gray-500 p-1">T</div>
+                <div class="text-center text-xs text-gray-500 p-1">F</div>
+                <div class="text-center text-xs text-gray-500 p-1">S</div>
+              </div>
+              <div class="grid grid-cols-7 gap-1">
+                <div class="text-center text-sm p-1 text-gray-400">27</div>
+                <div class="text-center text-sm p-1 text-gray-400">28</div>
+                <div class="text-center text-sm p-1 text-gray-400">29</div>
+                <div class="text-center text-sm p-1 text-gray-400">30</div>
+                <div class="text-center text-sm p-1 text-gray-400">31</div>
+                <div class="text-center text-sm p-1">1</div>
+                <div class="text-center text-sm p-1">2</div>
+                <div class="text-center text-sm p-1">3</div>
+                <div class="text-center text-sm p-1">4</div>
+                <div class="text-center text-sm p-1">5</div>
+                <div class="text-center text-sm p-1">6</div>
+                <div class="text-center text-sm p-1">7</div>
+                <div class="text-center text-sm p-1">8</div>
+                <div class="text-center text-sm p-1">9</div>
+                <div class="text-center text-sm p-1">10</div>
+                <div class="text-center text-sm p-1">11</div>
+                <div class="text-center text-sm p-1">12</div>
+                <div class="calendar-day text-center text-sm p-1 bg-blue-100 rounded-lg">13</div>
+                <div class="text-center text-sm p-1">14</div>
+                <div class="calendar-day text-center text-sm p-1 bg-blue-600 text-white rounded-lg font-bold">15</div>
+                <div class="text-center text-sm p-1">16</div>
+                <div class="text-center text-sm p-1">17</div>
+                <div class="text-center text-sm p-1">18</div>
+                <div class="text-center text-sm p-1">19</div>
+                <div class="text-center text-sm p-1">20</div>
+                <div class="calendar-day text-center text-sm p-1 bg-yellow-100 rounded-lg">21</div>
+                <div class="calendar-day text-center text-sm p-1 bg-yellow-500 text-white rounded-lg font-bold">22</div>
+                <div class="text-center text-sm p-1">23</div>
+                <div class="text-center text-sm p-1">24</div>
+                <div class="text-center text-sm p-1">25</div>
+                <div class="text-center text-sm p-1">26</div>
+                <div class="text-center text-sm p-1">27</div>
+                <div class="calendar-day text-center text-sm p-1 bg-blue-500 text-white rounded-lg font-bold">28</div>
+                <div class="text-center text-sm p-1">29</div>
+                <div class="text-center text-sm p-1">30</div>
+                <div class="text-center text-sm p-1 text-gray-400">1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Simple hover effect for sidebar tooltips
+    document.querySelectorAll('.sidebar-icon').forEach(icon => {
+      icon.addEventListener('mouseenter', function() {
+        const tooltip = this.querySelector('.sidebar-tooltip');
+        if(tooltip) {
+          tooltip.classList.remove('opacity-0');
+          tooltip.classList.add('opacity-100');
+        }
+      });
+      
+      icon.addEventListener('mouseleave', function() {
+        const tooltip = this.querySelector('.sidebar-tooltip');
+        if(tooltip) {
+          tooltip.classList.remove('opacity-100');
+          tooltip.classList.add('opacity-0');
+        }
+      });
+    });
+    
+    // Tab switching functionality
+    document.querySelectorAll('.active-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.active-tab').forEach(t => t.classList.remove('active-tab'));
+        this.classList.add('active-tab');
+      });
+    });
+  </script>
+</body>
+</html>

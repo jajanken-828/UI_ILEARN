@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iLearn - Learning Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            secondary: {
+              50: '#fefce8',
+              100: '#fef9c3',
+              200: '#fef08a',
+              300: '#fde047',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+              700: '#a16207',
+              800: '#854d0e',
+              900: '#713f12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #334155;
+    }
+    
+    .sidebar {
+      width: 260px;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .sidebar.collapsed {
+      width: 80px;
+    }
+    
+    .sidebar.collapsed .sidebar-text {
+      display: none;
+    }
+    
+    .sidebar-item {
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    
+    .sidebar-item:hover::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 24px;
+      width: 4px;
+      background: linear-gradient(to bottom, #3b82f6, #60a5fa);
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .sidebar-item.active {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+    
+    .sidebar-item.active .sidebar-icon {
+      color: #3b82f6;
+    }
+    
+    .main-content {
+      transition: margin-left 0.3s ease;
+    }
+    
+    .card {
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .course-progress {
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      background-color: #e2e8f0;
+    }
+    
+    .course-progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(to right, #3b82f6, #60a5fa);
+      transition: width 1s ease;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom right, #ef4444, #f87171);
+      color: white;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    }
+    
+    .profile-image {
+      border: 4px solid #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-tab {
+      position: relative;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-tab:hover {
+      background-color: #f1f5f9;
+    }
+    
+    .nav-tab.active {
+      color: #3b82f6;
+      font-weight: 500;
+    }
+    
+    .nav-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #3b82f6, #60a5fa);
+      border-radius: 3px 3px 0 0;
+    }
+    
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    
+    .status-online {
+      background-color: #10b981;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+    }
+    
+    .status-offline {
+      background-color: #94a3b8;
+      box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.3);
+    }
+    
+    .search-input:focus {
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+    
+    .featured-banner {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .featured-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      transform: rotate(30deg);
+    }
+    
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+    
+    /* Custom scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Mobile Sidebar */
+    .mobile-sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .mobile-sidebar-overlay.active {
+      display: block;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0 !important;
+        width: 100%;
+      }
+      
+      .search-input {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .featured-banner {
+        text-align: center;
+        padding: 1.5rem !important;
+      }
+      
+      .featured-banner-content {
+        padding-right: 0 !important;
+      }
+      
+      .featured-banner img {
+        display: none;
+      }
+      
+      .instructors-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .instructors-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-title {
+        font-size: 1.5rem;
+      }
+      
+      .featured-banner {
+        text-align: center;
+      }
+      
+      .featured-banner-button {
+        width: 100%;
+      }
+    }
+    
+    /* Fix for welcome banner overlapping */
+    .featured-banner-container {
+      position: relative;
+      overflow: hidden;
+      padding: 2rem;
+    }
+    
+    .featured-banner-content {
+      position: relative;
+      z-index: 10;
+      padding-right: 180px;
+    }
+    
+    .featured-banner-image {
+      position: absolute;
+      right: 2rem;
+      bottom: 0;
+      height: 160px;
+      z-index: 5;
+    }
+    
+    @media (max-width: 968px) {
+      .featured-banner-content {
+        padding-right: 0;
+      }
+      
+      .featured-banner-image {
+        position: relative;
+        right: 0;
+        margin-top: 1.5rem;
+        height: 140px;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex">
+  <!-- Mobile Overlay -->
+  <div class="mobile-sidebar-overlay" id="mobile-overlay"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar bg-white border-r border-slate-200 flex flex-col py-6 px-4 fixed h-full z-10" id="sidebar">
+    <div class="flex items-center justify-between px-2 mb-8">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
+          <i class="fas fa-graduation-cap text-white text-xl"></i>
+        </div>
+        <span class="font-bold text-xl text-slate-800">iLearn</span>
+      </div>
+      <button class="p-1 rounded-lg hover:bg-slate-100 text-slate-500" id="sidebar-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    
+    <nav class="flex-1 space-y-1">
+      <a href="ilearn.html" class="sidebar-item flex items-center space-x-3 py-3 px-4 rounded-xl text-slate-600 hover:text-primary-600">
+        <div class="sidebar-icon w-6 text-center">
+          <i class="fas fa-home"></i>
+        </div>
+        <span class="sidebar-text font-medium">Dashboard</span>
+      </a>
+      
+      <a href="subjects.html" class="sidebar-item flex items-center space-x-3 py-3 px-4 rounded-xl text-slate-600 hover:text-primary-600">
+        <div class="sidebar-icon w-6 text-center">
+          <i class="fas fa-book"></i>
+        </div>
+        <span class="sidebar-text font-medium">Subjects</span>
+      </a>
+      
+      <a href="messages.html" class="sidebar-item flex items-center space-x-3 py-3 px-4 rounded-xl text-slate-600 hover:text-primary-600">
+        <div class="sidebar-icon w-6 text-center">
+          <i class="fas fa-comments"></i>
+        </div>
+        <span class="sidebar-text font-medium">Messages</span>
+        <span class="ml-auto bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded-full">3</span>
+      </a>
+      
+      <a href="feed.html" class="sidebar-item active flex items-center space-x-3 py-3 px-4 rounded-xl text-slate-600">
+        <div class="sidebar-icon w-6 text-center">
+          <i class="fas fa-newspaper"></i>
+        </div>
+        <span class="sidebar-text font-medium">NCST Feed</span>
+      </a>
+      
+      <a href="house.html" class="sidebar-item flex items-center space-x-3 py-3 px-4 rounded-xl text-slate-600 hover:text-primary-600">
+        <div class="sidebar-icon w-6 text-center">
+          <i class="fas fa-users"></i>
+        </div>
+        <span class="sidebar-text font-medium">Community</span>
+      </a>
+      
+      <div class="py-4 px-4">
+        <div class="border-t border-slate-200"></div>
+      </div>
+      
+      <a href="#" class="sidebar-item flex items-center space-x-3 py-3 px-4 rounded-xl text-slate-600 hover:text-primary-600">
+        <div class="sidebar-icon w-6 text-center">
+          <i class="fas fa-cog"></i>
+        </div>
+        <span class="sidebar-text font-medium">Settings</span>
+      </a>
+      
+      <a href="#" class="sidebar-item flex items-center space-x-3 py-3 px-4 rounded-xl text-slate-600 hover:text-primary-600">
+        <div class="sidebar-icon w-6 text-center">
+          <i class="fas fa-sign-out-alt"></i>
+        </div>
+        <span class="sidebar-text font-medium">Logout</span>
+      </a>
+    </nav>
+    
+    <div class="px-4 pt-6 border-t border-slate-200">
+      <div class="bg-primary-50 rounded-xl p-4">
+        <div class="text-primary-800 font-medium text-sm mb-2">Need help?</div>
+        <p class="text-primary-600 text-xs mb-3">Contact our support team for assistance</p>
+        <button class="w-full bg-primary-600 hover:bg-primary-700 text-white py-2 rounded-lg text-xs font-medium transition-colors">
+          Get Help
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content flex-1 ml-64 min-h-screen flex flex-col" id="main-content">
+    <!-- Top Header - Fixed positioning issue -->
+    <header class="bg-white border-b border-slate-200 py-4 px-8 flex items-center justify-between sticky top-0 z-10">
+      <div class="header-content flex items-center justify-between w-full">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-800 header-title">Welcome back, <span class="text-primary-600">Kenneth</span> 👋</h1>
+          <p class="text-slate-500 hidden md:block">Track your progress and continue your learning journey</p>
+        </div>
+        
+        <div class="flex items-center space-x-4 header-actions">
+          <div class="relative hidden md:block">
+            <div class="relative">
+              <input type="text" placeholder="Search courses, resources..." class="search-input w-80 pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 text-slate-700">
+              <i class="fas fa-search absolute left-3 top-3.5 text-slate-400"></i>
+            </div>
+          </div>
+          
+          <div class="flex items-center space-x-3">
+            <button class="md:hidden p-2.5 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 text-slate-600" id="mobile-search-toggle">
+              <i class="fas fa-search"></i>
+            </button>
+            
+            <button class="relative p-2.5 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 text-slate-600">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge">3</span>
+            </button>
+            
+            <button class="md:hidden p-2.5 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 text-slate-600" id="mobile-menu-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center text-primary-700 font-medium hidden md:flex">
+              KJ
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Search Bar -->
+      <div class="relative w-full mt-2 md:hidden hidden" id="mobile-search-bar">
+        <input type="text" placeholder="Search courses, resources..." class="search-input w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 text-slate-700">
+        <i class="fas fa-search absolute left-3 top-3.5 text-slate-400"></i>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 p-8 overflow-y-auto custom-scrollbar" style="padding-top: 1.5rem;">
+      <!-- Stats Overview -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 stats-grid">
+        <div class="card bg-white p-6 flex items-center">
+          <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mr-4">
+            <i class="fas fa-book text-blue-600 text-xl"></i>
+          </div>
+          <div>
+            <div class="text-slate-500 text-sm">Enrolled Subjects</div>
+            <div class="text-2xl font-bold text-slate-800">12</div>
+          </div>
+        </div>
+        
+        <div class="card bg-white p-6 flex items-center">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mr-4">
+            <i class="fas fa-tasks text-amber-600 text-xl"></i>
+          </div>
+          <div>
+            <div class="text-slate-500 text-sm">Pending Activities</div>
+            <div class="text-2xl font-bold text-slate-800">8</div>
+          </div>
+        </div>
+        
+        <div class="card bg-white p-6 flex items-center">
+          <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mr-4">
+            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+          </div>
+          <div>
+            <div class="text-slate-500 text-sm">Completed</div>
+            <div class="text-2xl font-bold text-slate-800">18</div>
+          </div>
+        </div>
+        
+        <div class="card bg-white p-6 flex items-center">
+          <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mr-4">
+            <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+          </div>
+          <div>
+            <div class="text-slate-500 text-sm">Overall Progress</div>
+            <div class="text-2xl font-bold text-slate-800">72%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 main-grid">
+        <!-- Left Column -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Welcome Banner - Fixed Version -->
+          <div class="featured-banner">
+            <div class="featured-banner-container">
+              <div class="featured-banner-content">
+                <h2 class="text-2xl font-bold mb-3 text-white">Hello Nation Builders! Welcome to iLearn</h2>
+                <p class="text-blue-100 mb-6 max-w-lg">NCST Newsfeed – Your Campus, Your Story. News, Updates, Announcements and all about NCST.</p>
+                <button class="px-6 py-3 bg-amber-400 hover:bg-amber-500 text-slate-900 font-semibold rounded-xl transition-colors shadow-md flex items-center featured-banner-button">
+                  Explore NCST Feed <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+              <div class="featured-banner-image animate-float">
+                <img src="https://placehold.co/240x160/3b82f6/FFFFFF/png?text=NCST+Campus" alt="NCST Campus" class="h-full rounded-lg shadow-xl">
+              </div>
+            </div>
+          </div>
+
+          <!-- Your Courses -->
+          <div class="card bg-white p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="font-bold text-xl text-slate-800">Your Subjects</h3>
+              <a href="#" class="text-primary-600 font-medium flex items-center hover:text-primary-800 text-sm">
+                View All <i class="fas fa-chevron-right ml-2 text-xs"></i>
+              </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 hover:border-primary-300 transition-colors">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center">
+                    <i class="fas fa-calculator text-white text-xl"></i>
+                  </div>
+                  <span class="bg-amber-100 text-amber-800 text-xs font-medium px-2 py-1 rounded">HOT</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-lg mb-1">Discrete Structures 2</h4>
+                <p class="text-slate-500 text-sm mb-4">Instructor Billy Macalawa</p>
+                
+                <div class="mb-3">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="text-slate-600">Progress</span>
+                    <span class="text-primary-600 font-medium">90%</span>
+                  </div>
+                  <div class="course-progress">
+                    <div class="course-progress-fill" style="width: 90%"></div>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between text-xs text-slate-500">
+                  <span>12 Lessons</span>
+                  <span>5 Assignments</span>
+                </div>
+              </div>
+              
+              <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 hover:border-primary-300 transition-colors">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-12 h-12 rounded-lg bg-purple-500 flex items-center justify-center">
+                    <i class="fas fa-laptop-code text-white text-xl"></i>
+                  </div>
+                  <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded">NEW</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-lg mb-1">Human Computer Interaction 2</h4>
+                <p class="text-slate-500 text-sm mb-4">Instructor Mathew Divida</p>
+                
+                <div class="mb-3">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="text-slate-600">Progress</span>
+                    <span class="text-primary-600 font-medium">78%</span>
+                  </div>
+                  <div class="course-progress">
+                    <div class="course-progress-fill" style="width: 78%"></div>
+                  </div>
+                </div>
+                
+                <div class="flex justify-between text-xs text-slate-500">
+                  <span>8 Lessons</span>
+                  <span>3 Assignments</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div class="space-y-8">
+          <!-- Profile Card -->
+          <div class="card bg-white p-6">
+            <div class="flex flex-col items-center text-center">
+              <div class="relative mb-4">
+                <img src="https://placehold.co/80x80/3b82f6/FFFFFF/png?text=KJ" alt="Profile" class="profile-image w-20 h-20 rounded-full object-cover">
+                <div class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-primary-600 flex items-center justify-center border-2 border-white cursor-pointer">
+                  <i class="fas fa-pen text-xs text-white"></i>
+                </div>
+              </div>
+              
+              <h2 class="font-bold text-lg text-slate-800">Kenneth Jan Dela Cruz</h2>
+              <p class="text-slate-500 text-sm mt-1 flex items-center justify-center">
+                <i class="fas fa-map-marker-alt mr-1.5 text-primary-500"></i> 
+                Cavite, Philippines
+              </p>
+              
+              <div class="w-full bg-slate-100 rounded-full h-2.5 mt-5">
+                <div class="bg-primary-600 h-2.5 rounded-full" style="width: 72%"></div>
+              </div>
+              <div class="w-full flex justify-between text-sm text-slate-500 mt-2">
+                <span>Overall Progress</span>
+                <span class="text-slate-800 font-medium">72%</span>
+              </div>
+              
+              <a href="profile.html" class="w-full mt-5">
+                <button class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-medium transition-colors px-4">
+                  View Full Profile
+                </button>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Upcoming Deadlines -->
+          <div class="card bg-white p-6">
+            <div class="flex justify-between items-center mb-5">
+              <h3 class="font-semibold text-slate-800">Upcoming Deadlines</h3>
+              <a href="#" class="text-primary-600 text-sm font-medium hover:text-primary-800">View All</a>
+            </div>
+            
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center mr-3">
+                    <i class="fas fa-clipboard-list text-red-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-slate-800">LAB EXAM</h4>
+                    <p class="text-slate-500 text-xs">Discrete Structures 2</p>
+                  </div>
+                </div>
+                <span class="text-slate-500 text-sm font-medium">Sep 5</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center mr-3">
+                    <i class="fas fa-edit text-amber-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-slate-800">QUIZ #1</h4>
+                    <p class="text-slate-500 text-xs">Integrative Programming</p>
+                  </div>
+                </div>
+                <span class="text-slate-500 text-sm font-medium">Sep 12</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
+                    <i class="fas fa-paint-brush text-blue-600"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-slate-800">ACTIVITY 2</h4>
+                    <p class="text-slate-500 text-xs">Web Systems</p>
+                  </div>
+                </div>
+                <span class="text-slate-500 text-sm font-medium">Sep 20</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Instructors Section -->
+      <div class="mt-8">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="font-bold text-xl text-slate-800">Your Instructors</h3>
+          <a href="#" class="text-primary-600 font-medium flex items-center hover:text-primary-800 text-sm">
+            View All <i class="fas fa-chevron-right ml-2 text-xs"></i>
+          </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 instructors-grid">
+          <div class="card bg-white p-5 flex flex-col items-center text-center">
+            <img src="https://placehold.co/64x64/3b82f6/FFFFFF/png?text=NM" alt="Instructor" class="rounded-full w-16 h-16 object-cover border-4 border-slate-100 mb-4">
+            <h4 class="font-bold text-slate-800">Prof. Nathaniel Martos</h4>
+            <p class="text-slate-500 text-sm mt-1">PATHFIT 3</p>
+            <div class="mt-3 flex items-center text-xs">
+              <span class="status-indicator status-online mr-2"></span>
+              <span class="text-green-600 font-medium">Online</span>
+            </div>
+          </div>
+          
+          <div class="card bg-white p-5 flex flex-col items-center text-center">
+            <img src="https://placehold.co/64x64/3b82f6/FFFFFF/png?text=DP" alt="Instructor" class="rounded-full w-16 h-16 object-cover border-4 border-slate-100 mb-4">
+            <h4 class="font-bold text-slate-800">Prof. Denver Prado</h4>
+            <p class="text-slate-500 text-sm mt-1">WEB SYSTEM</p>
+            <div class="mt-3 flex items-center text-xs">
+              <span class="status-indicator status-offline mr-2"></span>
+              <span class="text-slate-500 font-medium">Offline</span>
+            </div>
+          </div>
+          
+          <div class="card bg-white p-5 flex flex-col items-center text-center">
+            <img src="https://placehold.co/64x64/3b82f6/FFFFFF/png?text=AI" alt="Instructor" class="rounded-full w-16 h-16 object-cover border-4 border-slate-100 mb-4">
+            <h4 class="font-bold text-slate-800">Prof. Andrei Isanan</h4>
+            <p class="text-slate-500 text-sm mt-1">ETHICS</p>
+            <div class="mt-3 flex items-center text-xs">
+              <span class="status-indicator status-online mr-2"></span>
+              <span class="text-green-600 font-medium">Online</span>
+            </div>
+          </div>
+          
+          <div class="card bg-white p-5 flex flex-col items-center text-center">
+            <img src="https://placehold.co/64x64/3b82f6/FFFFFF/png?text=KC" alt="Instructor" class="rounded-full w-16 h-16 object-cover border-4 border-slate-100 mb-4">
+            <h4 class="font-bold text-slate-800">Prof. Ken Cardenas</h4>
+            <p class="text-slate-500 text-sm mt-1">SOCIAL ISSUES</p>
+            <div class="mt极3 flex items-center text-xs">
+              <span class="status-indicator status-offline mr-2"></span>
+              <span class="text-slate-500 font-medium">Offline</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Toggle sidebar
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+    const mobileSearchBar = document.getElementById('mobile-search-bar');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    
+    // Function to toggle sidebar
+    function toggleSidebar() {
+      if (window.innerWidth < 1024) {
+        // Mobile behavior
+        sidebar.classList.toggle('active');
+        mobileOverlay.classList.toggle('active');
+        document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+      } else {
+        // Desktop behavior
+        sidebar.classList.toggle('collapsed');
+        mainContent.style.marginLeft = sidebar.classList.contains('collapsed') ? '80px' : '260px';
+      }
+    }
+    
+    // Function to close sidebar on mobile
+    function closeSidebar() {
+      if (window.innerWidth < 1024) {
+        sidebar.classList.remove('active');
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    
+    // Event listeners
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    mobileMenuToggle.addEventListener('click', toggleSidebar);
+    mobileOverlay.addEventListener('click', closeSidebar);
+    
+    // Toggle mobile search
+    mobileSearchToggle.addEventListener('click', () => {
+      mobileSearchBar.classList.toggle('hidden');
+    });
+    
+    // Initialize progress animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const progressBars = document.querySelectorAll('.course-progress-fill');
+      progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => {
+          bar.style.width = width;
+        }, 300);
+      });
+      
+      // Handle responsive behavior on load
+      if (window.innerWidth < 1024) {
+        mainContent.style.marginLeft = '0';
+      }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 1024) {
+        mainContent.style.marginLeft = '0';
+        sidebar.classList.remove('collapsed');
+        
+        // Close sidebar if open when resizing to mobile
+        if (sidebar.classList.contains('active')) {
+          document.body.style.overflow = '';
+        }
+      } else {
+        // Reset to desktop behavior
+        mobileOverlay.classList.remove('active');
+        sidebar.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Apply collapsed state if needed
+        mainContent.style.marginLeft = sidebar.classList.contains('collapsed') ? '80px' : '260px';
+      }
+    });
+  </script>
+</body>
+</html>
